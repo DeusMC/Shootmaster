@@ -3,14 +3,18 @@ import { createServer, type Server } from "node:http";
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Initialize OpenAI client only if API key is available
+let openai: OpenAI | null = null;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/generate-mission", async (req, res) => {
     try {
       const { playerLevel, coordinates } = req.body;
 
-      if (!process.env.OPENAI_API_KEY) {
+      if (!openai) {
         return res.json({
           mission: generateFallbackMission(playerLevel || 1, coordinates),
         });
@@ -59,7 +63,7 @@ Respond with JSON in exactly this format:
 
   app.post("/api/generate-weapon", async (req, res) => {
     try {
-      if (!process.env.OPENAI_API_KEY) {
+      if (!openai) {
         return res.json({ stats: generateFallbackWeaponStats() });
       }
 
