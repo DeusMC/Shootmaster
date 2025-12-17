@@ -1,12 +1,12 @@
 import { Text, type TextProps } from "react-native";
 
 import { useTheme } from "@/hooks/useTheme";
-import { Typography } from "@/constants/theme";
+import { Typography, Fonts } from "@/constants/theme";
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: "h1" | "h2" | "h3" | "h4" | "body" | "small" | "link";
+  type?: "h1" | "h2" | "h3" | "h4" | "body" | "small" | "link" | "caption" | "mono";
 };
 
 export function ThemedText({
@@ -50,6 +50,10 @@ export function ThemedText({
         return Typography.small;
       case "link":
         return Typography.link;
+      case "caption":
+        return Typography.caption;
+      case "mono":
+        return { ...Typography.mono, fontFamily: Fonts?.mono };
       default:
         return Typography.body;
     }

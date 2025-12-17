@@ -1,32 +1,70 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainTabNavigator from "@/navigation/MainTabNavigator";
-import ModalScreen from "@/screens/ModalScreen";
 import { useScreenOptions } from "@/hooks/useScreenOptions";
+import MainMenuScreen from "@/screens/MainMenuScreen";
+import GameWorldScreen from "@/screens/GameWorldScreen";
+import PauseMenuScreen from "@/screens/PauseMenuScreen";
+import MissionBriefingScreen from "@/screens/MissionBriefingScreen";
+import InventoryScreen from "@/screens/InventoryScreen";
+import SettingsScreen from "@/screens/SettingsScreen";
 
 export type RootStackParamList = {
-  Main: undefined;
-  Modal: undefined;
+  MainMenu: undefined;
+  GameWorld: undefined;
+  PauseMenu: undefined;
+  MissionBriefing: { missionId?: string };
+  Inventory: undefined;
+  Settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStackNavigator() {
-  const screenOptions = useScreenOptions();
+  const screenOptions = useScreenOptions({ transparent: false });
 
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator
+      initialRouteName="MainMenu"
+      screenOptions={{
+        ...screenOptions,
+        headerShown: false,
+        animation: "fade",
+      }}
+    >
+      <Stack.Screen name="MainMenu" component={MainMenuScreen} />
+      <Stack.Screen name="GameWorld" component={GameWorldScreen} />
       <Stack.Screen
-        name="Main"
-        component={MainTabNavigator}
-        options={{ headerShown: false }}
+        name="PauseMenu"
+        component={PauseMenuScreen}
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
       />
       <Stack.Screen
-        name="Modal"
-        component={ModalScreen}
+        name="MissionBriefing"
+        component={MissionBriefingScreen}
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+      <Stack.Screen
+        name="Inventory"
+        component={InventoryScreen}
         options={{
           presentation: "modal",
-          headerTitle: "Modal",
+          headerShown: true,
+          headerTitle: "LOADOUT",
+        }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          presentation: "modal",
+          headerShown: true,
+          headerTitle: "Settings",
         }}
       />
     </Stack.Navigator>
